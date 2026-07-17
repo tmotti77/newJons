@@ -4,6 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths:
+      - "supabase/**"
+      - "packages/engine/**"
+      - "packages/shared/**"
+      - "scripts/simulate-live-game.ts"
+      - ".github/workflows/e2e.yml"
 
 concurrency:
   group: e2e
@@ -44,4 +50,5 @@ jobs:
           git config user.email "e2e@fastlane.local"
           git add docs/e2e-latest.md
           git diff --cached --quiet || git commit -m "e2e: latest simulation report [e2e-result]"
+          git pull --rebase origin main
           git push
