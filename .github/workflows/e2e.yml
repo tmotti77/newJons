@@ -1,0 +1,48 @@
+name: E2E (live backend)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: e2e
+  cancel-in-progress: false
+
+jobs:
+  simulate-live-game:
+    # skip the loop when the workflow itself commits results
+    if: "!contains(github.event.head_commit.message, '[e2e-result]')"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      SUPABASE_URL: https://viwjknigxfxwszfvxsrg.supabase.co
+      # anon key is publishable by design
+      SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpd2prbmlneGZ4d3N6ZnZ4c3JnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyNDQ0MDAsImV4cCI6MjA5OTgyMDQwMH0.r2-k_Unumfv8nfGHvzCcocn6buqXILi9MXLI7XPRjpw
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run live-game simulation
+        run: pnpm exec tsx scripts/simulate-live-game.ts
+
+      - name: Commit E2E report
+        run: |
+          git config user.name "e2e-bot"
+          git config user.email "e2e@fastlane.local"
+          git add docs/e2e-latest.md
+          git diff --cached --quiet || git commit -m "e2e: latest simulation report [e2e-result]"
+          git push
