@@ -1,12 +1,177 @@
 {
+  "common": { "language": "Language", "back": "Back", "loading": "Loading…" },
   "home": {
     "title": "Fast Lane",
-    "tagline": "Race your friends through modern life.",
+    "tagline": "Race your friends through modern life. Work, study, party — hit your goals first.",
     "createGame": "Create game",
     "joinGame": "Join with code",
-    "howToPlay": "How to play"
+    "howToPlay": "How to play",
+    "resume": "↩ Return to your game",
+    "authError": "Couldn't connect. Enable Anonymous sign-in in Supabase (Auth → Providers) or check your connection."
   },
-  "common": {
-    "language": "Language"
+  "setup": { "title": "Who are you?", "namePlaceholder": "Your name", "done": "Let's go" },
+  "create": { "title": "New game", "preset": "Race length", "timer": "Planning timer", "go": "Create lobby" },
+  "join": { "title": "Enter room code", "go": "Join", "failed": "Couldn't join that room" },
+  "preset": {
+    "quick": "Quick", "quickTime": "~15 min",
+    "classic": "Classic", "classicTime": "~25 min",
+    "marathon": "Marathon", "marathonTime": "45+ min",
+    "custom": "Custom"
+  },
+  "lobby": {
+    "codeLabel": "Room code",
+    "share": "Share invite",
+    "shareMessage": "Join my Fast Lane game! Code: {{code}}",
+    "players": "Players ({{n}}/8)",
+    "maxWeeks": "{{n}} weeks max",
+    "start": "Start game",
+    "needTwo": "Need at least 2 players",
+    "waitingForHost": "Waiting for the host to start…",
+    "leave": "Leave"
+  },
+  "play": {
+    "week": "Week {{n}}",
+    "fed": "Fed", "hungry": "Hungry!",
+    "submit": "Lock in my week",
+    "submittedWaiting": "Locked in — waiting for the others",
+    "changePlan": "Change plan"
+  },
+  "plan": {
+    "tuLeft": "{{left}} TU left",
+    "projected": "₪{{cash}} projected",
+    "empty": "Tap a building to plan your week"
+  },
+  "reveal": {
+    "week": "Week {{n}}",
+    "topEarner": "{{name}} raked in ₪{{amount}} this week 💰",
+    "bigSpender": "{{name}} blew ₪{{amount}} this week 🔥",
+    "standings": "Standings",
+    "tapToContinue": "tap to continue"
+  },
+  "over": { "wins": "takes the Fast Lane!", "timeUp": "Time's up!", "playAgain": "Play again" },
+  "howto": {
+    "title": "How to play",
+    "goal": "Hit all 4 life goals before your friends: money, happiness, education, career.",
+    "time": "Every round is one week. You have 60 Time Units — spend them wisely.",
+    "plan": "Everyone plans at the same time: tap buildings, queue actions, lock in before the timer.",
+    "reveal": "Then the week happens to everyone at once. Rent hikes. Robberies. Drama.",
+    "win": "First to all 4 goals wins. Slow players get roasted. Good luck."
+  },
+  "loc": {
+    "home": "Home", "burgerBarn": "Burger Barn", "college": "City College",
+    "gadgetCity": "Gadget City", "flipIt": "Flip It", "dressCode": "Dress Code",
+    "careerHub": "CareerHub", "bank": "Coin & Bank", "quickMart": "QuickMart",
+    "theSpot": "The Spot", "rentALord": "Rent-A-Lord"
+  },
+  "job": {
+    "none": "Jobless",
+    "gig": "Gig tasks", "burgerCrew": "Burger Barn crew", "shiftLead": "Shift lead",
+    "officeAssistant": "Office assistant", "juniorDev": "Junior developer",
+    "manager": "Manager", "executive": "Executive"
+  },
+  "housing": { "roachTowers": "Roach Towers", "midtownFlat": "Midtown Flat", "skylineLofts": "Skyline Lofts" },
+  "item": {
+    "phone": "Phone", "tv": "TV", "console": "Console", "fridge": "Fridge",
+    "laptop": "Laptop", "bike": "Bike", "car": "Car"
+  },
+  "outfit": { "casual": "Casual outfit", "business": "Business attire", "luxury": "Luxury outfit" },
+  "track": { "business": "Business", "tech": "Tech", "trade": "Trade" },
+  "req": { "courses": "{{n}} courses", "weeks": "{{n}} weeks exp.", "degree": "Degree" },
+  "actions": {
+    "workShift": "Work at {{job}} (₪{{wage}}/TU)",
+    "tuShift": "{{tu}} TU",
+    "addWork": "Add shift (+₪{{amount}})",
+    "apply": "Apply",
+    "applySub": "Walk-in job, ₪{{wage}}/TU",
+    "study": "Study",
+    "studySub": "₪{{cost}} · {{tu}} TU per course",
+    "onlineCourse": "Online course: {{track}}",
+    "buy": "Buy", "sell": "Sell", "owned": "Owned ✓",
+    "priceTag": "₪{{price}}",
+    "sellItem": "Sell {{item}} (50%)",
+    "usedItem": "Used {{item}} (70%)",
+    "outfitSub": "₪{{price}} · lasts {{weeks}} weeks",
+    "outfitOwned": "Owned · {{weeks}} weeks left",
+    "deposit": "Deposit cash",
+    "depositSub": "Safe from robbery · {{pct}}%/week interest",
+    "withdraw": "Withdraw",
+    "bankBalance": "In bank: ₪{{amount}}",
+    "cryptoBuy": "Buy CryptoRocket 🚀",
+    "cryptoSell": "Sell CryptoRocket",
+    "cryptoSub": "Price: ₪{{price}} · ±40%/week",
+    "cryptoHolding": "Holding: ₪{{value}}",
+    "eat": "Eat", "eatBasic": "Weekly groceries", "eatBulk": "Bulk food (needs fridge)",
+    "eatSub": "₪{{cost}} · you must eat every week",
+    "bulkSub": "₪{{cost}} · {{weeks}} weeks of food",
+    "delivery": "Order delivery", "order": "Order",
+    "lottery": "Lottery tickets",
+    "lotterySub": "₪{{cost}} each · jackpot ₪{{jackpot}}",
+    "club": "Club night", "movie": "Movie", "stream": "Movie night at home",
+    "funSub": "₪{{cost}} · +{{hap}} happiness",
+    "go": "Go",
+    "rest": "Rest", "restSub": "+2 happiness per 10 TU",
+    "payRent": "Pay rent",
+    "rentSub": "₪{{amount}} due this week — skip it and risk eviction",
+    "move": "Move",
+    "moveSub": "₪{{rent}}/week · +{{hap}} happiness · deposit ₪{{deposit}}"
+  },
+  "chip": {
+    "work": "Work {{tu}}TU",
+    "eat": { "basic": "Groceries", "bulk": "Bulk food", "delivery": "Delivery" },
+    "fun": { "club": "Club", "movie": "Movie", "stream": "Stream" },
+    "rent": "Rent", "move": "Move"
+  },
+  "event": {
+    "cryptoPump": "CryptoRocket PUMPED {{pct}}% 🚀",
+    "cryptoDump": "CryptoRocket dumped {{pct}}% 📉",
+    "rentHike": "Rent up {{pct}}% city-wide. Thanks, landlords 🏢",
+    "marketHeat": "Housing market on fire: +{{pct}}% rent 🔥",
+    "recession": "Recession hits! T3+ jobs are shaking 😬",
+    "robbery": "Robbed! Lost ₪{{amount}} carrying too much cash 😱",
+    "sickness": "Got sick from skipping meals (−₪{{cost}}) 🤒",
+    "foundWallet": "Found a wallet: +₪{{amount}} 🍀",
+    "phoneBroke": "Phone broke 📵",
+    "overtime": "Overtime bonus +{{pct}}% 🤑",
+    "shiftCancelled": "Shift cancelled — half pay 😤",
+    "layoff": "Laid off in the recession 📦",
+    "evicted": "EVICTED. Off to the Shelter 📦",
+    "jackpot": "JACKPOT! Won ₪{{amount}} on the lottery 🎰"
+  },
+  "err": {
+    "tu": { "overrun": "Not enough time" },
+    "cash": { "insufficient": "Not enough cash" },
+    "travel": { "samePlace": "Already there" },
+    "work": {
+      "shiftTooShort": "Shift too short",
+      "weeklyCap": "Weekly work cap reached",
+      "needPhone": "Gig work needs a phone",
+      "wrongLocation": "Wrong place for this job",
+      "dressCode": "Missing required outfit"
+    },
+    "study": { "wrongLocation": "Study at college (or home with laptop)" },
+    "buy": { "wrongLocation": "Not sold here", "alreadyOwned": "Already owned", "unknownItem": "Unknown item" },
+    "sell": { "wrongLocation": "Sell at Flip It", "notOwned": "You don't own that", "unknownItem": "Unknown item" },
+    "eat": { "alreadyAte": "Already ate this week", "needFridge": "Needs a fridge", "wrongLocation": "Can't eat that here" },
+    "bank": { "wrongLocation": "Go to the bank", "badAmount": "Bad amount", "insufficientBalance": "Not enough in bank" },
+    "crypto": { "insufficientUnits": "Not enough crypto" },
+    "lottery": { "wrongLocation": "Buy at QuickMart", "badCount": "Max {{max}} tickets/week" },
+    "fun": { "wrongLocation": "Not here" },
+    "rent": { "wrongLocation": "Go to Rent-A-Lord", "evicted": "You're evicted — re-deposit first", "alreadyPaid": "Rent already paid" },
+    "move": { "badTier": "Bad apartment", "samePlace": "You live here already" },
+    "apply": { "wrongLocation": "Apply in person" },
+    "job": {
+      "unknown": "Unknown job", "courses": "Not enough courses", "degree": "Needs a degree",
+      "track": "Wrong course track", "experience": "Not enough experience",
+      "outfit": "Missing required outfit", "items": "Missing required gear"
+    },
+    "rest": { "badAmount": "Bad rest amount" },
+    "player": { "unknown": "Unknown player" },
+    "action": { "unknown": "Unknown action" },
+    "game": { "notFound": "Room not found", "alreadyStarted": "Game already started", "full": "Room is full (8)", "needTwoPlayers": "Need 2+ players", "notActive": "Game not active" },
+    "round": { "stale": "Round already ended", "locked": "Round is resolving" },
+    "notHost": "Only the host can do that",
+    "notInGame": "You're not in this game",
+    "auth": "Connection problem — try again",
+    "plan": { "invalid": "Plan has errors" }
   }
 }

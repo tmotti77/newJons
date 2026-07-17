@@ -404,9 +404,9 @@ Turn-based + Supabase = thousands of concurrent games on modest tiers. Watch: re
 - ✅ **Accept:** script completes full games repeatedly incl. "player never submits" and "double resolve call"; RLS tests green.
 
 ### Phase 3 — Client Core Gameplay (Weeks 7–10)
-- [ ] Setup/home/create/join/lobby screens, share sheet, presence avatars, host start.
-- [ ] Planning screen §4.2 complete with local validation + projections. Reveal §4.3 with synced choreography. Game over + rematch.
-- [ ] Reconnection: single `hydrateFromSnapshot` path; AppState resume; return-to-game banner. Ugly-but-clear placeholder art is fine.
+- [x] Setup/home/create/join/lobby screens, share sheet, presence avatars, host start.
+- [x] Planning screen §4.2 complete with local validation + projections. Reveal §4.3 with synced choreography. Game over + rematch.
+- [x] Reconnection: single `hydrateFromSnapshot` path; AppState resume; return-to-game banner. Ugly-but-clear placeholder art is fine.
 - ✅ **Accept:** 4 real phones play a full Quick game start→finish; kill+reopen app mid-round on one phone → seamless rejoin; airplane-mode during planning → recovers.
 
 ### Phase 4 — Art, Polish, Feel (Weeks 11–13)
@@ -475,4 +475,4 @@ Each gets its own mini-plan when reached; architecture above already accommodate
 - [ ] In-game chat/emotes in live mode: v1 = 6 quick emotes only (moderation-free), full chat later?
 - [ ] Team/spectator modes: parked until post-launch.
 
-*Last updated: 2026-07-17 · v1.2 (Phases 0–2 complete) · Next review: end of Phase 3*
+*Last updated: 2026-07-17 · v1.3 (Phases 0–3 code complete; Phase 3 device acceptance pending real-phone test) · Next review: after first real playtest*

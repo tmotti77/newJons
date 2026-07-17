@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-07-17 — Phase 3: Client core gameplay
+- Full screen map (§4.1): home w/ return-to-game banner, setup (name+avatar), create (preset/timer), join (code entry), lobby (presence avatars, share sheet, host start), planning screen (§4.2: stats strip, server-clock countdown, tappable town grid, per-location action sheets, plan tray with live TU/cash projections, lock-in), reveal choreography (§4.3: splash → global events → juicy player cards → standings), game over.
+- Data layer: typed API client, anonymous auth bootstrap, zustand store with the single hydrateFromSnapshot path, realtime doorbell (postgres_changes + AppState resume + 5s safety poll), timer-expiry resolve calls.
+- Design system: dark board-game theme, emoji avatars/buildings, RTL-safe layouts, full en+he i18n (every string keyed).
+- Monorepo Metro config; engine runs on-device for instant plan validation.
+
 ## 2026-07-17 — Phase 2: Backend
 - Single `api` edge function (deployed) routing all §3.9 endpoints; zod-validated, server re-validates plans with the engine; CAS-idempotent resolve (planning→resolving→resolved) with stale-claim recovery; auto-rest fill for missing plans.
 - Migrations: `resolving` round status, `games.global_state`, realtime publication, pg_cron sweep (60s) for expired rounds + retention.
