@@ -382,19 +382,19 @@ Turn-based + Supabase = thousands of concurrent games on modest tiers. Watch: re
 > Estimates assume ~15–20 focused hrs/week solo + AI agents. Each task should become one agent session / PR. **Do not start a phase before the previous phase's acceptance criteria pass.**
 
 ### Phase 0 — Foundations (Week 1)
-- [ ] Init pnpm monorepo, TS strict everywhere, ESLint+Prettier, Vitest wired in `engine`/`shared`.
-- [ ] Expo app boots (blank home), expo-router, i18n scaffold with he/en + RTL switch working.
-- [ ] Supabase project: local dev via CLI, migrations pipeline, first migration = §3.8 schema, RLS on.
-- [ ] GitHub Actions: typecheck + lint + engine tests on PR. CLAUDE.md + AGENTS.md committed (§8).
+- [x] Init pnpm monorepo, TS strict everywhere, ESLint+Prettier, Vitest wired in `engine`/`shared`.
+- [x] Expo app boots (blank home), expo-router, i18n scaffold with he/en + RTL switch working.
+- [x] Supabase project: local dev via CLI, migrations pipeline, first migration = §3.8 schema, RLS on.
+- [x] GitHub Actions: typecheck + lint + engine tests on PR. CLAUDE.md + AGENTS.md committed (§8).
 - ✅ **Accept:** `pnpm test` green in CI; app runs on a real phone in both languages; `supabase db reset` reproduces schema.
 
 ### Phase 1 — Game Engine (Weeks 2–4) ← the soul of the project
-- [ ] `types.ts`, `balance.ts` (every number from §2 tables), seeded `rng.ts`.
-- [ ] `validatePlan` with sequential simulation + per-action errors. Exhaustive unit tests (TU overrun, cash underflow, wrong location, dress-code, job requirements).
-- [ ] `resolveWeek`: wages, rent+eviction, hunger, happiness decay, purchases, bank/crypto/lottery, courses, promotions, event rolls, ledger generation.
-- [ ] `goals.ts` win checks + week-cap scoring. Event tables + weights.
-- [ ] **Determinism property test:** 1,000 random games × replay → identical results. Fuzz: random plans never crash/produce negative cash.
-- [ ] Balance sim script: 10k auto-played games, output weeks-to-win distribution per preset → tune `balance.ts` until Quick ≈ 10–14 weeks.
+- [x] `types.ts`, `balance.ts` (every number from §2 tables), seeded `rng.ts`.
+- [x] `validatePlan` with sequential simulation + per-action errors. Exhaustive unit tests (TU overrun, cash underflow, wrong location, dress-code, job requirements).
+- [x] `resolveWeek`: wages, rent+eviction, hunger, happiness decay, purchases, bank/crypto/lottery, courses, promotions, event rolls, ledger generation.
+- [x] `goals.ts` win checks + week-cap scoring. Event tables + weights.
+- [x] **Determinism property test:** 1,000 random games × replay → identical results. Fuzz: random plans never crash/produce negative cash.
+- [x] Balance sim script: 10k auto-played games, output weeks-to-win distribution per preset → tune `balance.ts` until Quick ≈ 10–14 weeks.
 - ✅ **Accept:** >90% line coverage on engine; determinism + fuzz suites green; sim report committed to `/docs`.
 
 ### Phase 2 — Backend (Weeks 5–6)
@@ -475,4 +475,4 @@ Each gets its own mini-plan when reached; architecture above already accommodate
 - [ ] In-game chat/emotes in live mode: v1 = 6 quick emotes only (moderation-free), full chat later?
 - [ ] Team/spectator modes: parked until post-launch.
 
-*Last updated: 2026-07-17 · v1.0 · Next review: end of Phase 1*
+*Last updated: 2026-07-17 · v1.1 (Phases 0–1 complete) · Next review: end of Phase 2*
