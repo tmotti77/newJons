@@ -1,0 +1,12 @@
+{
+  "home": {
+    "title": "Fast Lane",
+    "tagline": "Race your friends through modern life.",
+    "createGame": "Create game",
+    "joinGame": "Join with code",
+    "howToPlay": "How to play"
+  },
+  "common": {
+    "language": "Language"
+  }
+}

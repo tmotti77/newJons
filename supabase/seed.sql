@@ -1,0 +1,2 @@
+-- Local/dev seed data. Intentionally empty for Phase 0 — Phase 2 adds
+-- fixtures for the simulate-live-game script (DEV_PLAN §3.9).

@@ -1,0 +1,20 @@
+project_id = "fastlane"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+
+[db]
+port = 54322
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+enable_signup = true
+
+[auth.external]
+# anonymous auth only for MVP (DEV_PLAN §3.6)

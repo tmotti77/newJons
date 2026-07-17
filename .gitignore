@@ -1,0 +1,13 @@
+node_modules
+.expo
+dist
+.turbo
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+coverage
+.eas
+ios/
+android/
