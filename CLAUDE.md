@@ -10,4 +10,5 @@
 - Small PRs: one task from `docs/DEV_PLAN.md` per branch. Reference the task checkbox.
 - Definition of done: acceptance criteria of the task met + CI green + DEV_PLAN checkbox ticked.
 
-See `docs/DEV_PLAN.md` for the full spec (this is the single source of truth — update it as decisions change).
+See `docs/DEV_PLAN.md` for the full spec (single source of truth — update it as decisions change).
+See `docs/HANDOFF.md` for current project status, live infrastructure details, and next steps.
