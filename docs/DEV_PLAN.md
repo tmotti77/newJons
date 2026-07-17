@@ -398,9 +398,9 @@ Turn-based + Supabase = thousands of concurrent games on modest tiers. Watch: re
 - ✅ **Accept:** >90% line coverage on engine; determinism + fuzz suites green; sim report committed to `/docs`.
 
 ### Phase 2 — Backend (Weeks 5–6)
-- [ ] Edge functions §3.9 with zod, advisory-locked idempotent resolve, auto-rest fill, timer sweep cron, retention cron.
-- [ ] Realtime wiring verified (presence + postgres_changes). RLS integration tests (deny direct writes).
-- [ ] `/scripts/simulate-live-game.ts`: drives 4 fake clients through a full game via functions.
+- [x] Edge functions §3.9 with zod, advisory-locked idempotent resolve, auto-rest fill, timer sweep cron, retention cron.
+- [x] Realtime wiring verified (presence + postgres_changes). RLS integration tests (deny direct writes).
+- [x] `/scripts/simulate-live-game.ts`: drives 4 fake clients through a full game via functions.
 - ✅ **Accept:** script completes full games repeatedly incl. "player never submits" and "double resolve call"; RLS tests green.
 
 ### Phase 3 — Client Core Gameplay (Weeks 7–10)
@@ -475,4 +475,4 @@ Each gets its own mini-plan when reached; architecture above already accommodate
 - [ ] In-game chat/emotes in live mode: v1 = 6 quick emotes only (moderation-free), full chat later?
 - [ ] Team/spectator modes: parked until post-launch.
 
-*Last updated: 2026-07-17 · v1.1 (Phases 0–1 complete) · Next review: end of Phase 2*
+*Last updated: 2026-07-17 · v1.2 (Phases 0–2 complete) · Next review: end of Phase 3*
