@@ -64,6 +64,8 @@ export const LOCATION_META: Record<string, { emoji: string }> = {
   careerHub: { emoji: "💼" },
   bank: { emoji: "🏦" },
   quickMart: { emoji: "🛒" },
-  theSpot: { emoji: "🪩" },
+  // 🎉 not 🪩: mirror ball is Unicode 14 (2021) and renders as tofu on the
+  // older Android emoji fonts we still support.
+  theSpot: { emoji: "🎉" },
   rentALord: { emoji: "🏢" }
 };

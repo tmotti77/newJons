@@ -1,3 +1,7 @@
+// Hermes ships without Intl.PluralRules; i18next needs it for correct Hebrew
+// plural categories (one/two/many/other). Must load before i18next.init.
+import "intl-pluralrules";
+
 import * as Localization from "expo-localization";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";

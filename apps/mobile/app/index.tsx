@@ -71,10 +71,18 @@ export default function Home() {
       <View style={{ gap: spacing.m }}>
         <Button label={t("home.createGame")} onPress={() => void go("/create")} />
         <Button label={t("home.joinGame")} variant="secondary" onPress={() => void go("/join")} />
-        <Button label={t("home.howToPlay")} variant="ghost" onPress={() => router.push("/how-to-play")} />
+        <Button
+          label={t("home.howToPlay")}
+          variant="ghost"
+          onPress={() => router.push("/how-to-play")}
+        />
       </View>
 
-      <Button label={`${t("common.language")}: ${i18n.language === "he" ? "עברית" : "English"}`} variant="ghost" onPress={toggleLanguage} />
+      <Button
+        label={`${t("common.language")}: ${i18n.language === "he" ? "עברית" : "English"}`}
+        variant="ghost"
+        onPress={toggleLanguage}
+      />
     </Screen>
   );
 }

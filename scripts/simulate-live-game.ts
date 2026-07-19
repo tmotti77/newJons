@@ -148,13 +148,16 @@ async function playFullGame(clients: Client[], opts: { dropPlayer3InWeek?: numbe
       const statuses = [r1.status, r2.status].map((s, i) => [r1, r2][i]!.status ?? "?");
       const outcomes = [r1, r2].map((r) => r.status ?? r.error);
       const resolvedCount = [r1, r2].filter((r) => r.status === "resolved").length;
-      if (resolvedCount > 1) throw new Error(`double-resolve BUG: both calls resolved (${JSON.stringify(outcomes)})`);
+      if (resolvedCount > 1)
+        throw new Error(`double-resolve BUG: both calls resolved (${JSON.stringify(outcomes)})`);
     }
 
     const check = await api("rejoin-game", host.token, { gameId });
     if (check.snapshot.game.status === "finished") {
-      console.log(`  finished in week ${week}; winner=${check.snapshot.game.winnerId?.slice(0, 8)}`);
-      return { weeks: week, winner: check.snapshot.game.winnerId };
+      console.log(
+        `  finished in week ${week}; winner=${check.snapshot.game.winnerId?.slice(0, 8)}`
+      );
+      return { weeks: week, winner: check.snapshot.game.winnerId, gameId };
     }
   }
   throw new Error("game did not finish within 35 weeks");
@@ -173,11 +176,16 @@ async function rlsChecks(clients: Client[]) {
     seed: 1
   });
   if (!ins.error) throw new Error("RLS BUG: direct insert into games succeeded");
-  const upd = await sb.from("game_players").update({ state: {} }).eq("player_id", clients[0]!.userId);
+  const upd = await sb
+    .from("game_players")
+    .update({ state: {} })
+    .eq("player_id", clients[0]!.userId);
   if (!upd.error && (upd.count ?? 0) > 0) throw new Error("RLS BUG: direct update succeeded");
   // Reading games you're not in must return nothing.
   const sel = await sb.from("games").select("id").limit(5);
-  console.log(`  direct insert denied ✓  direct update denied ✓  select rows visible: ${sel.data?.length ?? 0}`);
+  console.log(
+    `  direct insert denied ✓  direct update denied ✓  select rows visible: ${sel.data?.length ?? 0}`
+  );
 }
 
 /** Realtime verification (§3.5): subscribe to postgres_changes and count events. */
@@ -233,9 +241,29 @@ async function main() {
   const g1 = await playFullGame(clients, {});
   report.push(`- Game 1 (all submit): finished in ${g1.weeks} weeks ✓`);
 
+  // Direct client read of round_results — the reveal screen's path. Regression
+  // guard for RLS policy recursion (42P17), which edge-function reads (service
+  // role, RLS bypassed) can never catch.
+  const sbRead = createClient(URL, ANON, {
+    auth: { persistSession: false },
+    global: { headers: { Authorization: `Bearer ${clients[0]!.token}` } }
+  });
+  const rr = await sbRead
+    .from("round_results")
+    .select("round_number")
+    .eq("game_id", g1.gameId)
+    .order("round_number")
+    .limit(5);
+  if (rr.error || !rr.data?.length)
+    throw new Error(`reveal-path read failed: ${rr.error?.message ?? "no rows"}`);
+  console.log(`reveal-path direct read: ${rr.data.length} rows ✓`);
+  report.push(`- Direct client read of round_results (reveal path): ✓`);
+
   console.log("game 2: player 3 stops submitting from week 2 (AFK/auto-rest)");
   const g2 = await playFullGame(clients, { dropPlayer3InWeek: 2 });
-  report.push(`- Game 2 (P3 AFK from w2, timer-expiry resolve + double-resolve calls): finished in ${g2.weeks} weeks ✓`);
+  report.push(
+    `- Game 2 (P3 AFK from w2, timer-expiry resolve + double-resolve calls): finished in ${g2.weeks} weeks ✓`
+  );
 
   await new Promise((r) => setTimeout(r, 2000));
   const rtCount = rt.count();
@@ -244,7 +272,9 @@ async function main() {
   if (rtCount < 1) {
     // Non-fatal: server-side publication is migration-verified; end-to-end
     // delivery gets its authoritative test on-device in Phase 3.
-    report.push("- Realtime: no events received in Node client (WARN — recheck on-device in Phase 3)");
+    report.push(
+      "- Realtime: no events received in Node client (WARN — recheck on-device in Phase 3)"
+    );
     console.warn("WARN: no realtime events received in Node client");
   } else {
     report.push(`- Realtime: ${rtCount} postgres_changes events received ✓`);
@@ -252,7 +282,9 @@ async function main() {
 
   const { writeFileSync } = await import("node:fs");
   writeFileSync("docs/e2e-latest.md", report.join("\n") + "\n");
-  console.log(`\nPASS: game1=${g1.weeks}w game2=${g2.weeks}w rt=${rtCount} — report → docs/e2e-latest.md`);
+  console.log(
+    `\nPASS: game1=${g1.weeks}w game2=${g2.weeks}w rt=${rtCount} — report → docs/e2e-latest.md`
+  );
 }
 
 main().catch((e) => {

@@ -37,15 +37,30 @@ export default function Reveal() {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
     void (async () => {
-      const { data } = await supabase
-        .from("round_results")
-        .select("results")
-        .eq("game_id", id)
-        .eq("round_number", Number(round))
-        .maybeSingle();
-      if (data?.results) setResults(data.results as ResultRow);
+      // Bounded retry: the row is written before the next round is created,
+      // but a transient read failure must not strand the player here.
+      for (let attempt = 0; attempt < 10; attempt++) {
+        const { data, error } = await supabase
+          .from("round_results")
+          .select("results")
+          .eq("game_id", id)
+          .eq("round_number", Number(round))
+          .maybeSingle();
+        if (cancelled) return;
+        if (data?.results) {
+          setResults(data.results as ResultRow);
+          return;
+        }
+        if (error) console.warn(`reveal: round_results read failed: ${error.message}`);
+        await new Promise((r) => setTimeout(r, 1000));
+      }
+      if (!cancelled) router.back();
     })();
+    return () => {
+      cancelled = true;
+    };
   }, [id, round]);
 
   const steps = useMemo(() => {
@@ -154,7 +169,10 @@ export default function Reveal() {
   }, [step, steps.length]);
 
   return (
-    <Pressable style={{ flex: 1 }} onPress={() => setStep((s) => s + 1)}>
+    <Pressable
+      style={{ flex: 1 }}
+      onPress={() => (steps.length === 0 ? router.back() : setStep((s) => s + 1))}
+    >
       <Screen style={{ justifyContent: "center", gap: spacing.xl }}>
         {steps.length === 0 ? (
           <Text style={[type.dim, { textAlign: "center" }]}>{t("common.loading")}</Text>
