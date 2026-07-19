@@ -1,4 +1,4 @@
-# Fast Lane — Session Handoff (2026-07-17)
+# Fast Lane — Session Handoff (2026-07-19)
 
 Read this + `docs/DEV_PLAN.md` (the spec, single source of truth) + `CLAUDE.md` (rules)
 before doing anything. `CHANGELOG.md` has the per-phase history.
@@ -12,8 +12,13 @@ before doing anything. `CHANGELOG.md` has the per-phase history.
   CAS-idempotent resolve, pg_cron sweep every 60s. E2E-verified: 4 real full games played by
   4 authenticated clients via GitHub Actions (`.github/workflows/e2e.yml`), incl. AFK-player
   and concurrent-double-resolve chaos cases. See `docs/e2e-latest.md`.
-- **Phase 3** ✓ code complete, NOT yet tested on a real phone. All screens, realtime doorbell,
-  reconnection, full en+he i18n, dark design system. **First task: real-device playtest.**
+- **Phase 3** ✓ code complete AND verified end-to-end on an Android emulator (2026-07-19):
+  full Quick game vs `scripts/join-lobby-bot.ts` against prod — create/lobby/realtime
+  join/planning/reveal/game-over, kill+reopen → return-to-game banner → live rejoin,
+  Hebrew UI. Critical RLS recursion bug found & fixed in the process (see below).
+  **Remaining acceptance gate (physical-only): 2+ real phones via Expo Go** — airplane
+  mode mid-round, RTL mirroring reload, real-network latency. Use the lobby bot to
+  fill seats: `SUPABASE_ANON_KEY=<anon> pnpm exec tsx scripts/join-lobby-bot.ts <CODE>`.
 
 ## Infrastructure
 
@@ -33,12 +38,20 @@ before doing anything. `CHANGELOG.md` has the per-phase history.
 
 ## Known issues / open items
 
-1. Realtime postgres_changes delivery unverified end-to-end (Node CI client was flaky; the
-   app also has a 5s snapshot poll as backstop). Verify on-device, then consider removing poll.
+1. ~~Realtime postgres_changes delivery unverified~~ **RESOLVED 2026-07-19**: root cause
+   was RLS policy recursion (42P17) — realtime evaluates RLS per subscriber, so the
+   recursive `game_players` policy silently killed all delivery (and broke the reveal
+   screen's direct read). Fixed in migration `20260719000000` (security definer
+   `is_game_member()`); e2e now receives 66 events. The 5s snapshot poll can likely be
+   relaxed after a real-phone confirmation.
 2. Reveal screen is functional but minimal — Phase 4 makes it juicy (animations, sound, roast lines).
 3. `leave-game` during active play marks disconnected only; no UI button for it yet in /play.
 4. Rematch (§4.1 /over) currently routes home instead of auto-creating a new lobby.
 5. Open decisions in DEV_PLAN §9 (final name, currency display, reveal length...) still open.
+6. Emulator quirks (not app bugs, documented for future sessions): Expo Go 2.31.2 on the
+   API 26 AVD needs launch-then-deep-link (direct cold-start intent races → UIManager
+   crash); Metro must be restarted after adding a dependency; `adb` reload intents only
+   foreground the task — force-stop first for a true JS reload.
 
 ## Next steps (in order)
 
