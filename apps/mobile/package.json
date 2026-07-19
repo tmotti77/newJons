@@ -11,6 +11,7 @@
     "lint": "eslint app src --ext .ts,.tsx"
   },
   "dependencies": {
+    "@babel/runtime": "^7.29.7",
     "@fastlane/engine": "workspace:*",
     "@fastlane/shared": "workspace:*",
     "@react-native-async-storage/async-storage": "1.23.1",

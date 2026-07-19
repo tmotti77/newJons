@@ -3,9 +3,19 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@fastlane/engine": ["../../packages/engine/src/index.ts"],
-      "@fastlane/shared": ["../../packages/shared/src/index.ts"]
+      "@fastlane/engine": [
+        "../../packages/engine/src/index.ts"
+      ],
+      "@fastlane/shared": [
+        "../../packages/shared/src/index.ts"
+      ]
     }
   },
-  "include": ["app", "src", "*.d.ts"]
+  "include": [
+    "app",
+    "src",
+    "*.d.ts",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }
