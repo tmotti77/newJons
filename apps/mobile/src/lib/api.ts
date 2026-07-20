@@ -59,6 +59,8 @@ export const api = {
   resolveRound: (gameId: string, roundNumber: number) =>
     call<{ status: string }>("resolve-round", { gameId, roundNumber }),
   rejoinGame: (gameId: string) => call<SnapshotResponse>("rejoin-game", { gameId }),
+  rematchGame: (gameId: string) =>
+    call<{ gameId: string; code: string; snapshot: GameSnapshot }>("rematch-game", { gameId }),
   leaveGame: (gameId: string, playerId?: string) =>
     call<{ ok: boolean }>("leave-game", playerId ? { gameId, playerId } : { gameId })
 };

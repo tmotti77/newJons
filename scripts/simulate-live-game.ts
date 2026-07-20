@@ -265,6 +265,26 @@ async function main() {
     `- Game 2 (P3 AFK from w2, timer-expiry resolve + double-resolve calls): finished in ${g2.weeks} weeks ✓`
   );
 
+  // Rematch (§2.8): two players race Play Again on the finished game — must
+  // converge to ONE lobby; a third player one-tap joins via the back-link.
+  console.log("rematch: two players race Play Again on the finished game");
+  const [rm1, rm2] = await Promise.all([
+    api("rematch-game", clients[0]!.token, { gameId: g2.gameId }),
+    api("rematch-game", clients[1]!.token, { gameId: g2.gameId })
+  ]);
+  if (!rm1.gameId || rm1.gameId !== rm2.gameId)
+    throw new Error(`rematch race split: ${rm1.gameId} vs ${rm2.gameId}`);
+  const oldSnap = await api("rejoin-game", clients[2]!.token, { gameId: g2.gameId });
+  if (oldSnap.snapshot.game.rematchGameId !== rm1.gameId)
+    throw new Error("finished game does not point at its rematch");
+  const rm3 = await api("rematch-game", clients[2]!.token, { gameId: g2.gameId });
+  if (rm3.gameId !== rm1.gameId) throw new Error("third player landed in a different rematch");
+  if (rm3.snapshot.players.length !== 3)
+    throw new Error(`rematch lobby has ${rm3.snapshot.players.length} players, expected 3`);
+  if (rm3.snapshot.game.status !== "lobby") throw new Error("rematch is not a lobby");
+  console.log(`  rematch lobby ${rm3.snapshot.game.code} with 3 players ✓`);
+  report.push("- Rematch: concurrent Play Again converges to one lobby; 3rd player joins ✓");
+
   await new Promise((r) => setTimeout(r, 2000));
   const rtCount = rt.count();
   rt.stop();

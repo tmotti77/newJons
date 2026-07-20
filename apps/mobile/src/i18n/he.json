@@ -1,5 +1,5 @@
 {
-  "common": { "language": "שפה", "back": "חזרה", "loading": "טוען…" },
+  "common": { "language": "שפה", "back": "חזרה", "loading": "טוען…", "cancel": "ביטול" },
   "home": {
     "title": "פאסטליין",
     "tagline": "מתחרים עם החברים על החיים המודרניים. עבודה, לימודים, בילויים — מי מגיע ליעדים ראשון?",
@@ -10,12 +10,20 @@
     "authError": "לא הצלחנו להתחבר. הפעילו כניסה אנונימית ב-Supabase (Auth → Providers) או בדקו את החיבור."
   },
   "setup": { "title": "מי אתם?", "namePlaceholder": "השם שלך", "done": "יאללה" },
-  "create": { "title": "משחק חדש", "preset": "אורך המירוץ", "timer": "טיימר תכנון", "go": "צור לובי" },
+  "create": {
+    "title": "משחק חדש",
+    "preset": "אורך המירוץ",
+    "timer": "טיימר תכנון",
+    "go": "צור לובי"
+  },
   "join": { "title": "הזינו קוד חדר", "go": "הצטרפות", "failed": "לא הצלחנו להצטרף לחדר" },
   "preset": {
-    "quick": "מהיר", "quickTime": "~15 דק'",
-    "classic": "קלאסי", "classicTime": "~25 דק'",
-    "marathon": "מרתון", "marathonTime": "45+ דק'",
+    "quick": "מהיר",
+    "quickTime": "~15 דק'",
+    "classic": "קלאסי",
+    "classicTime": "~25 דק'",
+    "marathon": "מרתון",
+    "marathonTime": "45+ דק'",
     "custom": "מותאם"
   },
   "lobby": {
@@ -31,7 +39,11 @@
   },
   "play": {
     "week": "שבוע {{n}}",
-    "fed": "אכלת", "hungry": "רעב!",
+    "leaveTitle": "לעזוב את המשחק?",
+    "leaveBody": "השחקן שלך ימשיך לנוח אוטומטית; המשחק ממשיך בלעדיך.",
+    "leaveConfirm": "עזיבה",
+    "fed": "אכלת",
+    "hungry": "רעב!",
     "submit": "נעל את השבוע שלי",
     "submittedWaiting": "נעול — מחכים לשאר",
     "changePlan": "שנה תוכנית"
@@ -45,10 +57,18 @@
     "week": "שבוע {{n}}",
     "topEarner": "{{name}} גרף ₪{{amount}} השבוע 💰",
     "bigSpender": "{{name}} שרף ₪{{amount}} השבוע 🔥",
+    "roastSad": "שבוע קשה ל{{name}}: {{amount}} אושר ירד לטמיון 😭",
+    "roastHappy": "{{name}} בשיא החיים: ‎+{{amount}} אושר ✨",
     "standings": "דירוג",
     "tapToContinue": "הקישו להמשך"
   },
-  "over": { "wins": "לוקח את הפאסטליין!", "timeUp": "נגמר הזמן!", "playAgain": "עוד משחק" },
+  "over": {
+    "wins": "לוקח את הפאסטליין!",
+    "timeUp": "נגמר הזמן!",
+    "playAgain": "עוד משחק",
+    "joinRematch": "הצטרפו למשחק החוזר!",
+    "home": "חזרה לדף הבית"
+  },
   "howto": {
     "title": "איך משחקים",
     "goal": "מגיעים ל-4 יעדי חיים לפני החברים: כסף, אושר, השכלה, קריירה.",
@@ -58,21 +78,41 @@
     "win": "הראשון שמגיע לכל 4 היעדים מנצח. בהצלחה."
   },
   "loc": {
-    "home": "הבית", "burgerBarn": "בורגר בארן", "college": "המכללה",
-    "gadgetCity": "גאדג'ט סיטי", "flipIt": "פליפ איט", "dressCode": "דרס קוד",
-    "careerHub": "קריירה-האב", "bank": "הבנק", "quickMart": "קוויק-מארט",
-    "theSpot": "הספוט", "rentALord": "רנט-א-לורד"
+    "home": "הבית",
+    "burgerBarn": "בורגר בארן",
+    "college": "המכללה",
+    "gadgetCity": "גאדג'ט סיטי",
+    "flipIt": "פליפ איט",
+    "dressCode": "דרס קוד",
+    "careerHub": "קריירה-האב",
+    "bank": "הבנק",
+    "quickMart": "קוויק-מארט",
+    "theSpot": "הספוט",
+    "rentALord": "רנט-א-לורד"
   },
   "job": {
     "none": "מובטל",
-    "gig": "עבודות גיג", "burgerCrew": "צוות בורגר בארן", "shiftLead": "אחראי משמרת",
-    "officeAssistant": "עוזר משרד", "juniorDev": "מתכנת ג'וניור",
-    "manager": "מנהל", "executive": "בכיר"
+    "gig": "עבודות גיג",
+    "burgerCrew": "צוות בורגר בארן",
+    "shiftLead": "אחראי משמרת",
+    "officeAssistant": "עוזר משרד",
+    "juniorDev": "מתכנת ג'וניור",
+    "manager": "מנהל",
+    "executive": "בכיר"
   },
-  "housing": { "roachTowers": "מגדלי הג'וקים", "midtownFlat": "דירה במרכז", "skylineLofts": "לופט יוקרה" },
+  "housing": {
+    "roachTowers": "מגדלי הג'וקים",
+    "midtownFlat": "דירה במרכז",
+    "skylineLofts": "לופט יוקרה"
+  },
   "item": {
-    "phone": "טלפון", "tv": "טלוויזיה", "console": "קונסולה", "fridge": "מקרר",
-    "laptop": "לפטופ", "bike": "אופניים", "car": "רכב"
+    "phone": "טלפון",
+    "tv": "טלוויזיה",
+    "console": "קונסולה",
+    "fridge": "מקרר",
+    "laptop": "לפטופ",
+    "bike": "אופניים",
+    "car": "רכב"
   },
   "outfit": { "casual": "לבוש יומיומי", "business": "לבוש עסקי", "luxury": "לבוש יוקרה" },
   "track": { "business": "עסקים", "tech": "הייטק", "trade": "מקצוע" },
@@ -86,7 +126,9 @@
     "study": "ללמוד",
     "studySub": "₪{{cost}} · {{tu}} יח' לקורס",
     "onlineCourse": "קורס אונליין: {{track}}",
-    "buy": "קנייה", "sell": "מכירה", "owned": "בבעלותך ✓",
+    "buy": "קנייה",
+    "sell": "מכירה",
+    "owned": "בבעלותך ✓",
     "priceTag": "₪{{price}}",
     "sellItem": "למכור {{item}} (50%)",
     "usedItem": "{{item}} יד שנייה (70%)",
@@ -100,16 +142,22 @@
     "cryptoSell": "למכור קריפטו-רוקט",
     "cryptoSub": "מחיר: ₪{{price}} · ±40% בשבוע",
     "cryptoHolding": "מחזיק: ₪{{value}}",
-    "eat": "לאכול", "eatBasic": "קניות לשבוע", "eatBulk": "אוכל בסיטונאות (צריך מקרר)",
+    "eat": "לאכול",
+    "eatBasic": "קניות לשבוע",
+    "eatBulk": "אוכל בסיטונאות (צריך מקרר)",
     "eatSub": "₪{{cost}} · חייבים לאכול כל שבוע",
     "bulkSub": "₪{{cost}} · אוכל ל{{weeks}} שבועות",
-    "delivery": "להזמין משלוח", "order": "הזמן",
+    "delivery": "להזמין משלוח",
+    "order": "הזמן",
     "lottery": "כרטיסי לוטו",
     "lotterySub": "₪{{cost}} לכרטיס · קופה ₪{{jackpot}}",
-    "club": "מסיבה במועדון", "movie": "סרט", "stream": "ערב סרט בבית",
+    "club": "מסיבה במועדון",
+    "movie": "סרט",
+    "stream": "ערב סרט בבית",
     "funSub": "₪{{cost}} · ‎+{{hap}} אושר",
     "go": "קדימה",
-    "rest": "מנוחה", "restSub": "‎+2 אושר לכל 10 יח'",
+    "rest": "מנוחה",
+    "restSub": "‎+2 אושר לכל 10 יח'",
     "payRent": "לשלם שכר דירה",
     "rentSub": "₪{{amount}} השבוע — דילוג מסכן אתכם בפינוי",
     "move": "מעבר",
@@ -119,7 +167,8 @@
     "work": "עבודה {{tu}} יח'",
     "eat": { "basic": "קניות", "bulk": "סיטונאות", "delivery": "משלוח" },
     "fun": { "club": "מועדון", "movie": "סרט", "stream": "סטרימינג" },
-    "rent": "שכ\"ד", "move": "מעבר"
+    "rent": "שכ\"ד",
+    "move": "מעבר"
   },
   "event": {
     "cryptoPump": "קריפטו-רוקט זינק {{pct}}% 🚀",
@@ -149,25 +198,55 @@
       "dressCode": "חסר לבוש נדרש"
     },
     "study": { "wrongLocation": "לומדים במכללה (או בבית עם לפטופ)" },
-    "buy": { "wrongLocation": "לא נמכר כאן", "alreadyOwned": "כבר בבעלותך", "unknownItem": "פריט לא מוכר" },
-    "sell": { "wrongLocation": "מוכרים בפליפ איט", "notOwned": "אין לך את זה", "unknownItem": "פריט לא מוכר" },
-    "eat": { "alreadyAte": "כבר אכלת השבוע", "needFridge": "צריך מקרר", "wrongLocation": "אי אפשר לאכול כאן" },
-    "bank": { "wrongLocation": "לכו לבנק", "badAmount": "סכום שגוי", "insufficientBalance": "אין מספיק בבנק" },
+    "buy": {
+      "wrongLocation": "לא נמכר כאן",
+      "alreadyOwned": "כבר בבעלותך",
+      "unknownItem": "פריט לא מוכר"
+    },
+    "sell": {
+      "wrongLocation": "מוכרים בפליפ איט",
+      "notOwned": "אין לך את זה",
+      "unknownItem": "פריט לא מוכר"
+    },
+    "eat": {
+      "alreadyAte": "כבר אכלת השבוע",
+      "needFridge": "צריך מקרר",
+      "wrongLocation": "אי אפשר לאכול כאן"
+    },
+    "bank": {
+      "wrongLocation": "לכו לבנק",
+      "badAmount": "סכום שגוי",
+      "insufficientBalance": "אין מספיק בבנק"
+    },
     "crypto": { "insufficientUnits": "אין מספיק קריפטו" },
     "lottery": { "wrongLocation": "קונים בקוויק-מארט", "badCount": "עד {{max}} כרטיסים בשבוע" },
     "fun": { "wrongLocation": "לא כאן" },
-    "rent": { "wrongLocation": "לכו לרנט-א-לורד", "evicted": "פונית — צריך פיקדון חדש", "alreadyPaid": "שכר הדירה כבר שולם" },
+    "rent": {
+      "wrongLocation": "לכו לרנט-א-לורד",
+      "evicted": "פונית — צריך פיקדון חדש",
+      "alreadyPaid": "שכר הדירה כבר שולם"
+    },
     "move": { "badTier": "דירה לא קיימת", "samePlace": "אתם כבר גרים כאן" },
     "apply": { "wrongLocation": "מגישים מועמדות במקום" },
     "job": {
-      "unknown": "משרה לא מוכרת", "courses": "אין מספיק קורסים", "degree": "צריך תואר",
-      "track": "מסלול קורסים שגוי", "experience": "אין מספיק ניסיון",
-      "outfit": "חסר לבוש נדרש", "items": "חסר ציוד נדרש"
+      "unknown": "משרה לא מוכרת",
+      "courses": "אין מספיק קורסים",
+      "degree": "צריך תואר",
+      "track": "מסלול קורסים שגוי",
+      "experience": "אין מספיק ניסיון",
+      "outfit": "חסר לבוש נדרש",
+      "items": "חסר ציוד נדרש"
     },
     "rest": { "badAmount": "כמות מנוחה שגויה" },
     "player": { "unknown": "שחקן לא מוכר" },
     "action": { "unknown": "פעולה לא מוכרת" },
-    "game": { "notFound": "החדר לא נמצא", "alreadyStarted": "המשחק כבר התחיל", "full": "החדר מלא (8)", "needTwoPlayers": "צריך 2+ שחקנים", "notActive": "המשחק לא פעיל" },
+    "game": {
+      "notFound": "החדר לא נמצא",
+      "alreadyStarted": "המשחק כבר התחיל",
+      "full": "החדר מלא (8)",
+      "needTwoPlayers": "צריך 2+ שחקנים",
+      "notActive": "המשחק לא פעיל"
+    },
     "round": { "stale": "הסיבוב כבר הסתיים", "locked": "הסיבוב בעיבוד" },
     "notHost": "רק המארח יכול",
     "notInGame": "אינך במשחק הזה",

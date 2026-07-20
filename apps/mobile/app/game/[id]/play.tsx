@@ -4,7 +4,7 @@
  */
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { JOBS, totalCourses, travelCost, type LocationId } from "@fastlane/engine";
@@ -28,6 +28,7 @@ export default function Play() {
   const planDraft = useGameStore((s) => s.planDraft);
   const addAction = useGameStore((s) => s.addAction);
   const removeAction = useGameStore((s) => s.removeAction);
+  const clearGame = useGameStore((s) => s.clearGame);
   const submitted = useGameStore((s) => s.submitted);
   const submitting = useGameStore((s) => s.submitting);
   const setSubmitted = useGameStore((s) => s.setSubmitted);
@@ -77,7 +78,10 @@ export default function Play() {
   const round = snapshot.round;
   const week = snapshot.game.globalState?.week ?? round?.roundNumber ?? 1;
   const courses = totalCourses(myState);
-  const jobName = myState.jobTier >= 0 ? t(JOBS.find((j) => j.tier === Math.max(0, myState.jobTier))!.nameKey) : t("job.none");
+  const jobName =
+    myState.jobTier >= 0
+      ? t(JOBS.find((j) => j.tier === Math.max(0, myState.jobTier))!.nameKey)
+      : t("job.none");
 
   const selectLocation = (loc: LocationId) => {
     if (loc !== planLocation) {
@@ -105,15 +109,41 @@ export default function Play() {
     if (round) void api.resolveRound(snapshot.game.id, round.roundNumber).catch(() => undefined);
   };
 
+  const leave = () => {
+    Alert.alert(t("play.leaveTitle"), t("play.leaveBody"), [
+      { text: t("common.cancel"), style: "cancel" },
+      {
+        text: t("play.leaveConfirm"),
+        style: "destructive",
+        onPress: () => {
+          void api.leaveGame(snapshot.game.id).catch(() => undefined);
+          clearGame();
+          router.replace("/");
+        }
+      }
+    ]);
+  };
+
   return (
     <Screen style={{ gap: spacing.m, paddingBottom: spacing.xl }}>
       {/* top bar */}
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
         <Text style={type.h1}>{t("play.week", { n: week })}</Text>
-        <View style={{ flexDirection: "row", gap: 6 }}>
-          {snapshot.players.map((p) => (
-            <Avatar key={p.playerId} id={p.avatar} size={26} dim={!p.isConnected} />
-          ))}
+        <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.m }}>
+          <View style={{ flexDirection: "row", gap: 6 }}>
+            {snapshot.players.map((p) => (
+              <Avatar key={p.playerId} id={p.avatar} size={26} dim={!p.isConnected} />
+            ))}
+          </View>
+          <Pressable
+            onPress={leave}
+            accessibilityLabel={t("play.leaveTitle")}
+            accessibilityRole="button"
+            hitSlop={12}
+            style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1, padding: spacing.xs })}
+          >
+            <Text style={{ fontSize: 20 }}>🚪</Text>
+          </Pressable>
         </View>
       </View>
 
@@ -126,13 +156,21 @@ export default function Play() {
       ) : null}
 
       {/* stats strip */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: spacing.s }} style={{ flexGrow: 0 }}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ gap: spacing.s }}
+        style={{ flexGrow: 0 }}
+      >
         <StatChip icon="💵" value={`₪${Math.floor(myState.cash)}`} color={colors.cash} />
         <StatChip icon="🏦" value={`₪${Math.floor(myState.bankBalance)}`} />
         <StatChip icon="😊" value={String(myState.happiness)} color={colors.happiness} />
         <StatChip icon="🎓" value={String(courses)} color={colors.education} />
         <StatChip icon="💼" value={jobName} color={colors.career} />
-        <StatChip icon={myState.fedThisWeek ? "🍽" : "🍽❗"} value={myState.fedThisWeek ? t("play.fed") : t("play.hungry")} />
+        <StatChip
+          icon={myState.fedThisWeek ? "🍽" : "🍽❗"}
+          value={myState.fedThisWeek ? t("play.fed") : t("play.hungry")}
+        />
       </ScrollView>
 
       {/* town */}
@@ -147,7 +185,11 @@ export default function Play() {
           <Text style={[type.h2, { textAlign: "center", color: colors.success }]}>
             ✓ {t("play.submittedWaiting")}
           </Text>
-          <Button label={t("play.changePlan")} variant="ghost" onPress={() => setSubmitted(false)} />
+          <Button
+            label={t("play.changePlan")}
+            variant="ghost"
+            onPress={() => setSubmitted(false)}
+          />
         </View>
       ) : (
         <Button

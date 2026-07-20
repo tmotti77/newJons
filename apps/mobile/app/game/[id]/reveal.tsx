@@ -4,8 +4,8 @@
  * from round_results (RLS allows players to read their game).
  */
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect, useMemo, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Animated, Easing, Pressable, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import type { EventCard, GoalProgress, LedgerLine } from "@fastlane/engine";
@@ -28,6 +28,33 @@ interface ResultRow {
 }
 
 const STEP_MS = 3200;
+
+/** Re-animates its content on every step change: fade in + rise, ≤300ms. */
+function StepCard({ stepKey, children }: { stepKey: number; children: React.ReactNode }) {
+  const progress = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    progress.setValue(0);
+    Animated.timing(progress, {
+      toValue: 1,
+      duration: 260,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true
+    }).start();
+  }, [stepKey, progress]);
+  return (
+    <Animated.View
+      style={{
+        opacity: progress,
+        transform: [
+          { translateY: progress.interpolate({ inputRange: [0, 1], outputRange: [24, 0] }) },
+          { scale: progress.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }
+        ]
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+}
 
 export default function Reveal() {
   const { t } = useTranslation();
@@ -120,6 +147,34 @@ export default function Reveal() {
         </Card>
       );
     }
+    // roast lines: biggest happiness swing each way (§2.6 social cards)
+    const moods = results.players.map((p) => ({
+      slot: p.slot,
+      mood: p.ledger.reduce((s, l) => s + (l.happinessDelta ?? 0), 0)
+    }));
+    const saddest = [...moods].sort((a, b) => a.mood - b.mood)[0];
+    if (saddest && saddest.mood <= -8) {
+      cards.push(
+        <Card key="roast-sad" style={{ alignItems: "center", gap: spacing.m }}>
+          <Avatar id={avatarOf(saddest.slot)} size={64} />
+          <Text style={[type.h1, { textAlign: "center" }]}>
+            {t("reveal.roastSad", { name: nameOf(saddest.slot), amount: -saddest.mood })}
+          </Text>
+        </Card>
+      );
+    }
+    const happiest = [...moods].sort((a, b) => b.mood - a.mood)[0];
+    if (happiest && happiest.mood >= 8 && happiest.slot !== saddest?.slot) {
+      cards.push(
+        <Card key="roast-happy" style={{ alignItems: "center", gap: spacing.m }}>
+          <Avatar id={avatarOf(happiest.slot)} size={64} />
+          <Text style={[type.h1, { textAlign: "center" }]}>
+            {t("reveal.roastHappy", { name: nameOf(happiest.slot), amount: happiest.mood })}
+          </Text>
+        </Card>
+      );
+    }
+
     for (const p of results.players) {
       for (const ev of p.eventCards.slice(0, 2)) {
         cards.push(
@@ -177,7 +232,9 @@ export default function Reveal() {
         {steps.length === 0 ? (
           <Text style={[type.dim, { textAlign: "center" }]}>{t("common.loading")}</Text>
         ) : (
-          steps[Math.min(step, steps.length - 1)]
+          <StepCard stepKey={Math.min(step, steps.length - 1)}>
+            {steps[Math.min(step, steps.length - 1)]}
+          </StepCard>
         )}
         <View style={{ flexDirection: "row", justifyContent: "center", gap: 6 }}>
           {steps.map((_, i) => (

@@ -14,15 +14,29 @@ export const gameModeSchema = z.enum(["live", "async", "solo"]);
 export type GameMode = z.infer<typeof gameModeSchema>;
 
 export const locationIdSchema = z.enum([
-  "home", "burgerBarn", "college", "gadgetCity", "flipIt",
-  "dressCode", "careerHub", "bank", "quickMart", "theSpot", "rentALord"
+  "home",
+  "burgerBarn",
+  "college",
+  "gadgetCity",
+  "flipIt",
+  "dressCode",
+  "careerHub",
+  "bank",
+  "quickMart",
+  "theSpot",
+  "rentALord"
 ]);
 export const itemIdSchema = z.enum(["phone", "tv", "console", "fridge", "laptop", "bike", "car"]);
 export const outfitIdSchema = z.enum(["casual", "business", "luxury"]);
 export const trackSchema = z.enum(["business", "tech", "trade"]);
 export const jobTierSchema = z.union([
-  z.literal(0), z.literal(1), z.literal(2), z.literal(3),
-  z.literal(4), z.literal(5), z.literal(6)
+  z.literal(0),
+  z.literal(1),
+  z.literal(2),
+  z.literal(3),
+  z.literal(4),
+  z.literal(5),
+  z.literal(6)
 ]);
 export const housingTierSchema = z.union([z.literal(0), z.literal(1), z.literal(2)]);
 
@@ -108,6 +122,10 @@ export const rejoinGameRequestSchema = z.object({
   gameId: z.string().uuid()
 });
 
+export const rematchGameRequestSchema = z.object({
+  gameId: z.string().uuid()
+});
+
 export const leaveGameRequestSchema = z.object({
   gameId: z.string().uuid(),
   /** Host may pass another player's id to kick (lobby only). */
@@ -136,6 +154,7 @@ export interface GameSnapshot {
     seed: number;
     currentRound: number;
     winnerId: string | null;
+    rematchGameId: string | null;
     globalState: { week: number; rentMultiplier: number; cryptoPrice: number } | null;
   };
   players: PublicPlayer[];

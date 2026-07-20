@@ -18,20 +18,21 @@ import {
   type GameState,
   type PlayerState
 } from "../../packages/engine/src/index";
-import { ROOM_CODE_ALPHABET, type GameSettingsInput, type GameSnapshot } from "../../packages/shared/src/index";
+import {
+  ROOM_CODE_ALPHABET,
+  type GameSettingsInput,
+  type GameSnapshot
+} from "../../packages/shared/src/index";
 
 declare const Deno: {
   env: { get(name: string): string | undefined };
   serve(handler: (req: Request) => Response | Promise<Response>): void;
 };
 
-
 export function admin(): SupabaseClient {
-  return createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    { auth: { persistSession: false } }
-  );
+  return createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
+    auth: { persistSession: false }
+  });
 }
 
 export function json(data: unknown, status = 200): Response {
@@ -100,6 +101,7 @@ interface GameRow {
   seed: number;
   current_round: number;
   winner_id: string | null;
+  rematch_game_id: string | null;
   global_state: { week: number; rentMultiplier: number; cryptoPrice: number } | null;
 }
 
@@ -186,6 +188,7 @@ export async function buildSnapshot(
       seed: Number(game.seed),
       currentRound: game.current_round,
       winnerId: game.winner_id,
+      rematchGameId: game.rematch_game_id ?? null,
       globalState: game.global_state
     },
     players: players.map((p) => ({

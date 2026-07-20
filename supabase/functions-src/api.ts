@@ -9,6 +9,7 @@ import { handler as devCreateUser } from "./dev-create-user";
 import { handler as joinGame } from "./join-game";
 import { handler as leaveGame } from "./leave-game";
 import { handler as rejoinGame } from "./rejoin-game";
+import { handler as rematchGame } from "./rematch-game";
 import { handler as resolveRound } from "./resolve-round";
 import { handler as startGame } from "./start-game";
 import { handler as submitPlan } from "./submit-plan";
@@ -27,6 +28,7 @@ const ROUTES: Record<string, (req: Request) => Promise<Response>> = {
   "submit-plan": submitPlan,
   "resolve-round": resolveRound,
   "rejoin-game": rejoinGame,
+  "rematch-game": rematchGame,
   "leave-game": leaveGame,
   "sweep-rounds": sweepRounds,
   "dev-create-user": devCreateUser
