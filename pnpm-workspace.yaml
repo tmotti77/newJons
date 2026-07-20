@@ -6,8 +6,3 @@ allowBuilds:
 
 onlyBuiltDependencies:
   - esbuild
-
-# Expo SDK 51: expo-router declares an open range on expo-linking; without this
-# pin pnpm resolves a version whose native module doesn't exist in Expo Go 51.
-overrides:
-  expo-linking: "~6.3.1"

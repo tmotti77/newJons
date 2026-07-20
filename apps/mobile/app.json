@@ -6,11 +6,19 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      "expo-localization"
+    ],
     "experiments": {
       "typedRoutes": true
     },
-    "ios": { "supportsTablet": true, "bundleIdentifier": "com.fastlane.app" },
-    "android": { "package": "com.fastlane.app" }
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fastlane.app"
+    },
+    "android": {
+      "package": "com.fastlane.app"
+    }
   }
 }
