@@ -175,7 +175,11 @@ export default function Play() {
 
       {/* town */}
       <ScrollView contentContainerStyle={{ paddingBottom: spacing.m }}>
-        <TownMap current={planLocation} onSelect={selectLocation} />
+        <TownMap
+          current={planLocation}
+          onSelect={selectLocation}
+          plannedTravels={planDraft.filter((a) => a.type === "travel").map((a) => a.to)}
+        />
       </ScrollView>
 
       {/* tray + submit */}
