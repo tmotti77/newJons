@@ -69,3 +69,5 @@ export const LOCATION_META: Record<string, { emoji: string }> = {
   theSpot: { emoji: "🎉" },
   rentALord: { emoji: "🏢" }
 };
+
+export { flat, BUILDING_COLOR } from "./tokens";
