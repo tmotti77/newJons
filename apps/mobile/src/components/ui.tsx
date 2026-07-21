@@ -13,7 +13,7 @@ import {
   type ViewStyle
 } from "react-native";
 
-import { AVATARS, colors, radius, spacing, type } from "../theme";
+import { AVATARS, colors, flat, radius, spacing, type } from "../theme";
 
 export function Button(props: {
   label: string;
@@ -31,11 +31,19 @@ export function Button(props: {
       style={({ pressed }) => [
         styles.btn,
         variant === "primary" && { backgroundColor: colors.primary },
-        variant === "secondary" && { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
-        variant === "ghost" && { backgroundColor: "transparent" },
+        variant === "secondary" && {
+          backgroundColor: colors.card,
+          borderWidth: 2,
+          borderColor: colors.border
+        },
+        variant === "ghost" && { backgroundColor: "transparent", shadowOpacity: 0, elevation: 0 },
         variant === "danger" && { backgroundColor: colors.danger },
         (disabled || loading) && { opacity: 0.45 },
-        pressed && { transform: [{ scale: 0.98 }] },
+        pressed && {
+          transform: [{ scale: 0.98 }, { translateY: 2 }],
+          shadowOffset: { width: 0, height: 1 },
+          elevation: 1
+        },
         style
       ]}
     >
@@ -85,10 +93,12 @@ export function Avatar(props: { id: string; size?: number; dim?: boolean }) {
 }
 
 export function StatChip(props: { icon: string; value: string; color?: string; label?: string }) {
+  const dotColor = props.color ?? colors.primary;
   return (
     <View style={styles.statChip}>
       <Text style={{ fontSize: 14 }}>{props.icon}</Text>
-      <Text style={[type.number, { fontSize: 14, color: props.color ?? colors.text }]}>
+      <View style={[styles.statDot, { backgroundColor: dotColor }]} />
+      <Text style={[type.number, styles.statValue, { color: props.color ?? colors.text }]}>
         {props.value}
       </Text>
       {props.label ? <Text style={type.tiny}>{props.label}</Text> : null}
@@ -97,9 +107,18 @@ export function StatChip(props: { icon: string; value: string; color?: string; l
 }
 
 export function ProgressBar(props: { pct: number; color: string; height?: number }) {
-  const h = props.height ?? 8;
+  const h = props.height ?? 12;
   return (
-    <View style={{ height: h, borderRadius: h / 2, backgroundColor: colors.bgElevated, overflow: "hidden" }}>
+    <View
+      style={{
+        height: h,
+        borderRadius: h / 2,
+        backgroundColor: colors.bgElevated,
+        borderWidth: 1,
+        borderColor: colors.border,
+        overflow: "hidden"
+      }}
+    >
       <View
         style={{
           width: `${Math.round(Math.min(1, Math.max(0, props.pct)) * 100)}%`,
@@ -117,25 +136,46 @@ const styles = StyleSheet.create({
   btn: {
     paddingVertical: 14,
     paddingHorizontal: spacing.xl,
-    borderRadius: radius.m,
+    borderRadius: radius.l,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    shadowColor: flat.outline,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4
   },
   btnLabel: { ...type.h2, color: colors.text },
   card: {
     backgroundColor: colors.card,
-    borderRadius: radius.l,
+    borderRadius: radius.l + 4,
     padding: spacing.l,
     borderWidth: 1,
-    borderColor: colors.border
+    borderColor: colors.border,
+    shadowColor: flat.outline,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 0,
+    elevation: 2
   },
   statChip: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 6,
     backgroundColor: colors.bgElevated,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: radius.pill
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.border
+  },
+  statDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 4
+  },
+  statValue: {
+    fontSize: 15,
+    fontWeight: "900"
   }
 });
