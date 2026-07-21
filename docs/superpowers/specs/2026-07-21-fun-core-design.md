@@ -64,6 +64,7 @@ Reusable foundation, not one-off screen styling:
 
 - **Tokens:** palette (coral `#ff5a4d`, teal `#1eb6a0`, gold `#e9a51f`, violet `#7d63e8`, warm neutrals), type scale, spacing, radii, shadows. Dark app chrome + bright town.
 - **Primitives:** `Chip`/stat pill, `Card`, `PrimaryButton`, `Meter` (the time bar), `Avatar`, and a `Building` component (flat-vector body + sign + glyph) parameterized by `LocationId`.
+- **Location icons (explicit quality bar):** each of the 11 locations gets its own **distinct, polished flat-vector icon/silhouette** — a real crafted mark per place (burger, mortarboard, bank columns, screen, disco, cart, house, …), not the crude placeholder glyphs in the concept mockups. This is a named acceptance item, not "nice to have." Icons are a reusable `LocationIcon` set so the map, action sheets, plan-tray chips, and reveal cards all share one visual language.
 - All colors/spacing come from tokens so Milestone 2 reskins by reuse.
 
 ### 4.2 Planning screen (`app/game/[id]/play.tsx` + `src/components/TownMap.tsx`, `PlanTray.tsx`, `LocationSheet.tsx`)
@@ -138,7 +139,8 @@ The redesign touches **presentation and content**. It does not touch the server,
 2. The time budget forces a visible weekly tradeoff.
 3. The reveal produces at least one "oh no / lol" moment naming a player.
 4. Flat-vector design system exists and is reused across both screens.
-5. Engine tests green; app bundles; Hebrew/RTL verified.
+5. Each of the 11 locations has its own polished, distinct flat-vector icon (no crude placeholder glyphs).
+6. Engine tests green; app bundles; Hebrew/RTL verified.
 
 ---
 
