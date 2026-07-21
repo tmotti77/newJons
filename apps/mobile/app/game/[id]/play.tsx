@@ -7,11 +7,18 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import { JOBS, totalCourses, travelCost, type LocationId } from "@fastlane/engine";
+import {
+  JOBS,
+  TIME_UNITS_PER_WEEK,
+  totalCourses,
+  travelCost,
+  type LocationId
+} from "@fastlane/engine";
 
 import { Countdown } from "../../../src/components/Countdown";
 import { LocationSheet } from "../../../src/components/LocationSheet";
 import { PlanTray } from "../../../src/components/PlanTray";
+import { TimeMeter } from "../../../src/components/TimeMeter";
 import { TownMap } from "../../../src/components/TownMap";
 import { Avatar, Button, Screen, StatChip } from "../../../src/components/ui";
 import { api } from "../../../src/lib/api";
@@ -172,6 +179,8 @@ export default function Play() {
           value={myState.fedThisWeek ? t("play.fed") : t("play.hungry")}
         />
       </ScrollView>
+
+      <TimeMeter used={validation?.projected?.tuUsed ?? 0} total={TIME_UNITS_PER_WEEK} />
 
       {/* town */}
       <ScrollView contentContainerStyle={{ paddingBottom: spacing.m }}>
