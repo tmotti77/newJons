@@ -7,20 +7,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import {
-  JOBS,
-  TIME_UNITS_PER_WEEK,
-  totalCourses,
-  travelCost,
-  type LocationId
-} from "@fastlane/engine";
+import { TIME_UNITS_PER_WEEK, travelCost, type LocationId } from "@fastlane/engine";
 
 import { Countdown } from "../../../src/components/Countdown";
 import { LocationSheet } from "../../../src/components/LocationSheet";
 import { PlanTray } from "../../../src/components/PlanTray";
+import { PlayerStatusPanel } from "../../../src/components/PlayerStatusPanel";
 import { TimeMeter } from "../../../src/components/TimeMeter";
 import { TownMap } from "../../../src/components/TownMap";
-import { Avatar, Button, Screen, StatChip } from "../../../src/components/ui";
+import { Avatar, Button, Screen } from "../../../src/components/ui";
 import { api } from "../../../src/lib/api";
 import { useGameChannel } from "../../../src/lib/realtime";
 import { toActionInput, useGameStore } from "../../../src/stores/gameStore";
@@ -84,11 +79,7 @@ export default function Play() {
 
   const round = snapshot.round;
   const week = snapshot.game.globalState?.week ?? round?.roundNumber ?? 1;
-  const courses = totalCourses(myState);
-  const jobName =
-    myState.jobTier >= 0
-      ? t(JOBS.find((j) => j.tier === Math.max(0, myState.jobTier))!.nameKey)
-      : t("job.none");
+  const me = snapshot.players.find((p) => p.slot === snapshot.mySlot);
 
   const selectLocation = (loc: LocationId) => {
     if (loc !== planLocation) {
@@ -162,23 +153,13 @@ export default function Play() {
         />
       ) : null}
 
-      {/* stats strip */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ gap: spacing.s }}
-        style={{ flexGrow: 0 }}
-      >
-        <StatChip icon="💵" value={`₪${Math.floor(myState.cash)}`} color={colors.cash} />
-        <StatChip icon="🏦" value={`₪${Math.floor(myState.bankBalance)}`} />
-        <StatChip icon="😊" value={String(myState.happiness)} color={colors.happiness} />
-        <StatChip icon="🎓" value={String(courses)} color={colors.education} />
-        <StatChip icon="💼" value={jobName} color={colors.career} />
-        <StatChip
-          icon={myState.fedThisWeek ? "🍽" : "🍽❗"}
-          value={myState.fedThisWeek ? t("play.fed") : t("play.hungry")}
-        />
-      </ScrollView>
+      {/* you: job + progress toward the win goals */}
+      <PlayerStatusPanel
+        player={myState}
+        state={engineState}
+        avatarId={me?.avatar ?? "a1"}
+        name={me?.displayName ?? ""}
+      />
 
       <TimeMeter used={validation?.projected?.tuUsed ?? 0} total={TIME_UNITS_PER_WEEK} />
 

@@ -62,6 +62,13 @@
     "standings": "Standings",
     "tapToContinue": "tap to continue"
   },
+  "status": {
+    "money": "Money",
+    "happiness": "Happiness",
+    "education": "Education",
+    "career": "Career",
+    "cash": "Cash"
+  },
   "over": {
     "wins": "takes the Fast Lane!",
     "timeUp": "Time's up!",

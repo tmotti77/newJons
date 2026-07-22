@@ -62,6 +62,13 @@
     "standings": "דירוג",
     "tapToContinue": "הקישו להמשך"
   },
+  "status": {
+    "money": "כסף",
+    "happiness": "אושר",
+    "education": "השכלה",
+    "career": "קריירה",
+    "cash": "מזומן"
+  },
   "over": {
     "wins": "לוקח את הפאסטליין!",
     "timeUp": "נגמר הזמן!",
