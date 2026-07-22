@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.29.7",
+    "@expo/metro-runtime": "~6.1.2",
     "@fastlane/engine": "workspace:*",
     "@fastlane/shared": "workspace:*",
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -32,6 +33,7 @@
     "react-native-screens": "4.16.0",
     "react-native-svg": "15.12.1",
     "react-native-url-polyfill": "^2.0.0",
+    "react-native-web": "^0.21.2",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
