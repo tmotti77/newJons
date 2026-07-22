@@ -11,11 +11,25 @@
  * once so the comedy spreads across players instead of piling on one victim.
  */
 import { REVEAL } from "./config/balance";
-import type { EventCategory, PlayerWeekResult, WeekResult } from "./types";
+import type { EventCard, EventCategory, LedgerLine } from "./types";
 
 export type RevealCard =
   | { kind: "global"; i18nKey: string; params: Record<string, string | number> }
   | { kind: "player"; slot: number; i18nKey: string; params: Record<string, string | number> };
+
+/**
+ * The subset of a resolved week that pickRevealCards actually reads. Both a
+ * full `WeekResult` and a persisted `round_results` row satisfy this shape,
+ * so the client can pass DB data straight in without a cast.
+ */
+export interface RevealInput {
+  globalEvents: EventCard[];
+  players: ReadonlyArray<{
+    slot: number;
+    ledger: LedgerLine[];
+    eventCards: EventCard[];
+  }>;
+}
 
 /** Per-player money/mood totals derived from the week's ledger. */
 interface PlayerTally {
@@ -35,7 +49,7 @@ const JUICY_EVENT_CATEGORIES: ReadonlySet<EventCategory> = new Set<EventCategory
   "jackpot"
 ]);
 
-function tally(p: PlayerWeekResult): PlayerTally {
+function tally(p: RevealInput["players"][number]): PlayerTally {
   let earned = 0;
   let spent = 0;
   let moodNet = 0;
@@ -67,7 +81,7 @@ function best<T>(items: readonly T[], score: (t: T) => number): T | undefined {
   return winner;
 }
 
-export function pickRevealCards(week: WeekResult): RevealCard[] {
+export function pickRevealCards(week: RevealInput): RevealCard[] {
   const globals: RevealCard[] = week.globalEvents.map((c) => ({
     kind: "global",
     i18nKey: c.key,

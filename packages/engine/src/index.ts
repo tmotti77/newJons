@@ -31,4 +31,4 @@ export { autoRestPlan, resolveWeek } from "./resolve";
 export { capWinner, goalProgress, standings, weekWinner } from "./goals";
 export { rollGlobalEvents, rollPersonalEvents } from "./events";
 export { pickRevealCards } from "./reveal";
-export type { RevealCard } from "./reveal";
+export type { RevealCard, RevealInput } from "./reveal";

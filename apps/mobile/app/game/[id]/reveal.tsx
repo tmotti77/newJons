@@ -8,6 +8,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Easing, Pressable, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import { pickRevealCards } from "@fastlane/engine";
 import type { EventCard, GoalProgress, LedgerLine } from "@fastlane/engine";
 
 import { Avatar, Card, ProgressBar, Screen } from "../../../src/components/ui";
@@ -107,86 +108,30 @@ export default function Reveal() {
       </View>
     );
 
-    // 2. global events
-    for (const ev of results.globalEvents) {
-      cards.push(
-        <Card key={ev.id} style={{ alignItems: "center", gap: spacing.m }}>
-          <Text style={{ fontSize: 44 }}>🌆</Text>
-          <Text style={[type.h1, { textAlign: "center" }]}>{t(ev.key, ev.params ?? {})}</Text>
-        </Card>
-      );
-    }
-
-    // 3. juicy player cards (biggest cash swing + all event cards)
-    const swings = results.players
-      .map((p) => ({
-        slot: p.slot,
-        earned: p.ledger.reduce((s, l) => s + Math.max(0, l.cashDelta ?? 0), 0),
-        spent: p.ledger.reduce((s, l) => s + Math.min(0, l.cashDelta ?? 0), 0)
-      }))
-      .sort((a, b) => b.earned - a.earned);
-    const topEarner = swings[0];
-    if (topEarner && topEarner.earned > 0) {
-      cards.push(
-        <Card key="earner" style={{ alignItems: "center", gap: spacing.m }}>
-          <Avatar id={avatarOf(topEarner.slot)} size={64} />
-          <Text style={[type.h1, { textAlign: "center" }]}>
-            {t("reveal.topEarner", { name: nameOf(topEarner.slot), amount: topEarner.earned })}
-          </Text>
-        </Card>
-      );
-    }
-    const spender = [...swings].sort((a, b) => a.spent - b.spent)[0];
-    if (spender && spender.spent < 0) {
-      cards.push(
-        <Card key="spender" style={{ alignItems: "center", gap: spacing.m }}>
-          <Avatar id={avatarOf(spender.slot)} size={64} />
-          <Text style={[type.h1, { textAlign: "center" }]}>
-            {t("reveal.bigSpender", { name: nameOf(spender.slot), amount: -spender.spent })}
-          </Text>
-        </Card>
-      );
-    }
-    // roast lines: biggest happiness swing each way (§2.6 social cards)
-    const moods = results.players.map((p) => ({
-      slot: p.slot,
-      mood: p.ledger.reduce((s, l) => s + (l.happinessDelta ?? 0), 0)
-    }));
-    const saddest = [...moods].sort((a, b) => a.mood - b.mood)[0];
-    if (saddest && saddest.mood <= -8) {
-      cards.push(
-        <Card key="roast-sad" style={{ alignItems: "center", gap: spacing.m }}>
-          <Avatar id={avatarOf(saddest.slot)} size={64} />
-          <Text style={[type.h1, { textAlign: "center" }]}>
-            {t("reveal.roastSad", { name: nameOf(saddest.slot), amount: -saddest.mood })}
-          </Text>
-        </Card>
-      );
-    }
-    const happiest = [...moods].sort((a, b) => b.mood - a.mood)[0];
-    if (happiest && happiest.mood >= 8 && happiest.slot !== saddest?.slot) {
-      cards.push(
-        <Card key="roast-happy" style={{ alignItems: "center", gap: spacing.m }}>
-          <Avatar id={avatarOf(happiest.slot)} size={64} />
-          <Text style={[type.h1, { textAlign: "center" }]}>
-            {t("reveal.roastHappy", { name: nameOf(happiest.slot), amount: happiest.mood })}
-          </Text>
-        </Card>
-      );
-    }
-
-    for (const p of results.players) {
-      for (const ev of p.eventCards.slice(0, 2)) {
+    // 2. juiciest moments — global events first, then the roast cards, all
+    //    chosen by the tested engine picker (packages/engine/src/reveal.ts).
+    //    The engine emits i18n keys + params by slot; we translate here and
+    //    inject the player's display name (the engine only knows slots).
+    const picked = pickRevealCards(results);
+    picked.forEach((card, i) => {
+      if (card.kind === "global") {
         cards.push(
-          <Card key={ev.id} style={{ alignItems: "center", gap: spacing.m }}>
-            <Avatar id={avatarOf(p.slot)} size={64} />
+          <Card key={`global-${i}`} style={{ alignItems: "center", gap: spacing.m }}>
+            <Text style={{ fontSize: 44 }}>🌆</Text>
+            <Text style={[type.h1, { textAlign: "center" }]}>{t(card.i18nKey, card.params)}</Text>
+          </Card>
+        );
+      } else {
+        cards.push(
+          <Card key={`player-${i}`} style={{ alignItems: "center", gap: spacing.m }}>
+            <Avatar id={avatarOf(card.slot)} size={64} />
             <Text style={[type.h1, { textAlign: "center" }]}>
-              {nameOf(p.slot)}: {t(ev.key, ev.params ?? {})}
+              {t(card.i18nKey, { name: nameOf(card.slot), ...card.params })}
             </Text>
           </Card>
         );
       }
-    }
+    });
 
     // 4. standings
     cards.push(
