@@ -4,7 +4,15 @@
 
 export * from "./types";
 export * from "./config/balance";
-export { GLOBAL_LANE, chance, intBetween, mulberry32, rngFor, symmetric, weightedPick } from "./rng";
+export {
+  GLOBAL_LANE,
+  chance,
+  intBetween,
+  mulberry32,
+  rngFor,
+  symmetric,
+  weightedPick
+} from "./rng";
 export {
   currentRent,
   defaultSettings,
@@ -22,3 +30,5 @@ export { validatePlan } from "./validate";
 export { autoRestPlan, resolveWeek } from "./resolve";
 export { capWinner, goalProgress, standings, weekWinner } from "./goals";
 export { rollGlobalEvents, rollPersonalEvents } from "./events";
+export { pickRevealCards } from "./reveal";
+export type { RevealCard } from "./reveal";

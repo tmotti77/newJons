@@ -270,6 +270,17 @@ export const EVENTS = {
   maxPersonalEventsPerPlayerPerWeek: 2
 } as const;
 
+// ---------- reveal (juiciest-moment picker, spec §4.4) ----------
+
+export const REVEAL = {
+  /** Max cards in one week's reveal (global events + player roasts combined). */
+  maxCards: 5,
+  /** A player's cash swing (₪, gross) must clear this to earn a money roast. */
+  cashRoastFloor: 150,
+  /** A player's net happiness swing must clear this to earn a mood roast. */
+  moodRoastFloor: 8
+} as const;
+
 // ---------- goals (§2.7) ----------
 
 export const GOAL_PRESETS: Record<"quick" | "classic" | "marathon", GoalSet> = {
