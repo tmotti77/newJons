@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-07-22 — Milestone 1: Fun core (flat-vector redesign + roast reveal)
+
+- **Planning screen** rebuilt as a tap-to-travel town (spec §4.2): flat-vector
+  `TownMap` with a loop road, player character, and dashed planned route; 11
+  distinct hand-drawn `LocationIcon` marks; `Building` cards with per-place
+  brand colours; the week **time budget** surfaced as a draining `TimeMeter`;
+  reskinned action sheets and route plan tray. Emits the same `Action[]` the
+  server already validates — no backend or engine-core change.
+- **Reveal comedy**, made testable and funnier:
+  - New pure engine module `pickRevealCards` (`packages/engine/src/reveal.ts`)
+    scans a resolved week's ledger + event cards and selects the juiciest
+    moments — capped at `REVEAL.maxCards`, globals first, one roast per player.
+    Thresholds live in `balance.ts` (`REVEAL`). 4 new unit tests; determinism
+    suite stays green (engine 105 + shared 6 = 111 total).
+  - `reveal.tsx` now renders from the picker instead of inline heuristics; the
+    picker's parameter is narrowed to a `RevealInput` so the persisted
+    `round_results` row feeds in with no cast.
+  - Rewrote the four roast lines + event drama copy (en + he) in a deadpan,
+    Jones-flavoured voice; keys/params verified identical across locales.
+- Gates: `pnpm test` green, mobile `tsc --noEmit` clean, `expo export` bundles
+  (3.63 MB Hermes). **Pending (physical-only):** on-device Quick game to
+  confirm the town reads as navigation, the time squeeze bites, and a reveal
+  card lands a laugh — plus Hebrew/RTL on both new screens.
+
 ## 2026-07-19 — Phase 3 verification on Android emulator + critical RLS fix
 
 - Fixed 42P17 RLS policy recursion (`game_players` policy referenced itself; every
