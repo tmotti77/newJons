@@ -1,5 +1,35 @@
 # Changelog
 
+## 2026-07-24 — Fun core polish: walking character, map fit, legible icons
+
+Addresses the three issues from the 2026-07-22 device playtest.
+
+- **The character walks.** Tapping a building now walks the player there along
+  the road before the action sheet opens, so a trip reads as a trip and a long
+  one visibly costs more than a short one (matching its Time-Unit cost). New pure
+  module `apps/mobile/src/town/geometry.ts` owns all map geometry and computes
+  paths along a ring (the road centreline offset outward); `Walker.tsx` animates
+  one native-driver `Animated.Value` over a 24-point resampled polyline — no
+  Reanimated, so the Expo Go / SDK 54 path is untouched. Mid-walk taps rush the
+  in-flight leg at 3× and re-target. Spec:
+  `docs/superpowers/specs/2026-07-24-walking-character-design.md`.
+- **Map fits the screen.** Road narrowed and building columns pulled inward
+  (x=60 / x=300) so the name pills stop clipping at the card edges; canvas
+  shortened (560→500) and buildings trimmed (58→54) so the map sits under the
+  status panel without dominating.
+- **Icons read at small size.** Redrawn high-contrast cream-on-tile instead of
+  tone-on-tone, low-detail, with the busiest marks (bank, The Spot, phone,
+  briefcase) simplified — no more mush at ~36px.
+- **CI now sees client code.** `apps/mobile` had no test script and root `test`
+  filtered to `./packages/*`; added vitest to the app and widened root `test`.
+  22 pure-geometry tests now run in CI (133 total, up from 111). Engine
+  untouched; determinism suite still green. Gates: lint + typecheck + test green,
+  `expo export` bundles (3.65 MB Hermes).
+- **Verified:** full 12-week Quick game played to a decisive finish against the
+  lobby bot (weeks 1–12 clean), landing exactly on the Quick p50=12 target.
+  **Pending (physical-only):** confirm the walk, map fit, and icons on a real
+  phone, plus Hebrew/RTL on the planning screen.
+
 ## 2026-07-22 — Milestone 1: Fun core (flat-vector redesign + roast reveal)
 
 - **Planning screen** rebuilt as a tap-to-travel town (spec §4.2): flat-vector

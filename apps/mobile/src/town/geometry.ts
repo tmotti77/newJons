@@ -12,31 +12,37 @@ import type { LocationId } from "@fastlane/engine";
 
 export type Pt = { x: number; y: number };
 
-/** The map is authored against this fixed design canvas and scaled to fit. */
+/**
+ * The map is authored against this fixed design canvas and scaled to fit.
+ * Shorter than wide-enough: columns are inset from the edges so the name pills
+ * have room, and the whole thing is kept short enough to sit under the status
+ * panel without dominating the screen.
+ */
 export const W = 360;
-export const H = 560;
-export const BUILDING_SIZE = 58;
+export const H = 500;
+export const BUILDING_SIZE = 54;
 
 /** The road as drawn (stroke width 34, so it reaches ±17 from the centreline). */
-export const ROAD = { x: 95, y: 75, width: 170, height: 420, rx: 75 } as const;
+export const ROAD = { x: 108, y: 66, width: 144, height: 372, rx: 72 } as const;
 export const ROAD_HALF_WIDTH = 17;
 
 /**
  * West zone on the left, east zone on the right, theSpot as a central plaza
- * inside the loop — a legible composition, not a scatter.
+ * inside the loop — a legible composition, not a scatter. Columns sit just
+ * outside the road walls (x=60 / x=300), leaving ~22px of margin for labels.
  */
 export const LAYOUT: Record<LocationId, Pt> = {
-  home: { x: 46, y: 90 },
-  burgerBarn: { x: 46, y: 168 },
-  quickMart: { x: 46, y: 246 },
-  rentALord: { x: 46, y: 324 },
-  flipIt: { x: 46, y: 402 },
-  dressCode: { x: 46, y: 480 },
-  college: { x: 314, y: 90 },
-  gadgetCity: { x: 314, y: 220 },
-  careerHub: { x: 314, y: 350 },
-  bank: { x: 314, y: 480 },
-  theSpot: { x: 180, y: 285 }
+  home: { x: 60, y: 74 },
+  burgerBarn: { x: 60, y: 146 },
+  quickMart: { x: 60, y: 218 },
+  rentALord: { x: 60, y: 290 },
+  flipIt: { x: 60, y: 362 },
+  dressCode: { x: 60, y: 434 },
+  college: { x: 300, y: 74 },
+  gadgetCity: { x: 300, y: 194 },
+  careerHub: { x: 300, y: 314 },
+  bank: { x: 300, y: 434 },
+  theSpot: { x: 180, y: 252 }
 };
 
 export const LOCATION_IDS = Object.keys(LAYOUT) as LocationId[];
@@ -59,7 +65,7 @@ const RING = {
 } as const;
 
 /** Where the character stands when it is "at" the central plaza. */
-const PLAZA_STAND: Pt = { x: 180, y: 322 };
+const PLAZA_STAND: Pt = { x: 180, y: 300 };
 
 const ARC_STEPS = 12;
 

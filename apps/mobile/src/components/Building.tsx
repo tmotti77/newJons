@@ -49,7 +49,7 @@ export function Building(props: {
             }
           ]}
         >
-          <LocationIcon id={id} size={Math.round(size * 0.55)} />
+          <LocationIcon id={id} size={Math.round(size * 0.66)} />
         </View>
       </View>
       <View style={styles.sign}>
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.s,
     paddingHorizontal: 6,
     paddingVertical: 1,
-    maxWidth: 82
+    maxWidth: 76
   },
   signText: {
     color: flat.outline,
