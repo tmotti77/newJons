@@ -1,76 +1,73 @@
 /**
  * The town (§4.2 reskin): a flat-vector town — grass, a loop road, and 11
- * tappable buildings. Tapping auto-inserts travel and opens the action
- * sheet (handled by the caller via `onSelect`). Draws the player's
- * character at `current`'s building and, when a route is planned, a dashed
- * line tracing the stops in order.
+ * tappable buildings. Tapping auto-inserts travel and the caller opens the
+ * action sheet when the character arrives (`onArrive`). The planned route is
+ * traced along the same road the character walks, so preview and walk agree.
  */
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useMemo, useState } from "react";
+import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import Svg, { Circle, G, Line, Path, Rect } from "react-native-svg";
+import Svg, { Path, Rect } from "react-native-svg";
 
 import type { LocationId } from "@fastlane/engine";
 
-import { colors, flat, radius } from "../theme";
+import { flat, radius } from "../theme";
+import {
+  BUILDING_SIZE,
+  H,
+  LAYOUT,
+  LOCATION_IDS,
+  ROAD,
+  W,
+  toSvgPath,
+  walkPath,
+  type Pt
+} from "../town/geometry";
 import { Building } from "./Building";
-
-type Pt = { x: number; y: number };
-
-// The whole map is authored against this fixed design canvas. The Svg
-// backdrop scales to the container width and buildings are positioned by
-// the same percentages, so the two stay pixel-aligned at any device width.
-const W = 360;
-const H = 560;
-const CENTER: Pt = { x: 180, y: 285 };
-const BUILDING_SIZE = 58;
-
-const ROAD = { x: 95, y: 75, width: 170, height: 420, rx: 75 };
-
-// West zone on the left, east zone on the right, theSpot as a central
-// plaza inside the loop — a legible, cute composition, not a scatter.
-const LAYOUT: Record<LocationId, Pt> = {
-  home: { x: 46, y: 90 },
-  burgerBarn: { x: 46, y: 168 },
-  quickMart: { x: 46, y: 246 },
-  rentALord: { x: 46, y: 324 },
-  flipIt: { x: 46, y: 402 },
-  dressCode: { x: 46, y: 480 },
-  college: { x: 314, y: 90 },
-  gadgetCity: { x: 314, y: 220 },
-  careerHub: { x: 314, y: 350 },
-  bank: { x: 314, y: 480 },
-  theSpot: { x: 180, y: 285 }
-};
-
-const LOCATION_IDS = Object.keys(LAYOUT) as LocationId[];
-
-/** Nudges a point a fixed distance toward the plaza — used to stand the
- * player character just off the building, on the road side. */
-function towardCenter(p: Pt, dist: number): Pt {
-  const dx = CENTER.x - p.x;
-  const dy = CENTER.y - p.y;
-  const len = Math.hypot(dx, dy) || 1;
-  return { x: p.x + (dx / len) * dist, y: p.y + (dy / len) * dist };
-}
+import { Walker } from "./Walker";
 
 export function TownMap(props: {
-  current: LocationId;
+  /** Where the player actually is right now. */
+  origin: LocationId;
   onSelect: (loc: LocationId) => void;
+  /** Travel destinations queued this week, in order. */
   plannedTravels?: LocationId[];
+  /** Fires when the character finishes walking to a stop. */
+  onArrive?: (loc: LocationId) => void;
+  /** Change to teleport rather than walk (new week). */
+  snapKey?: string | number;
 }) {
   const { t } = useTranslation();
-  const { current, onSelect, plannedTravels } = props;
+  const { origin, onSelect, plannedTravels, onArrive, snapKey } = props;
 
-  const route: Pt[] =
-    plannedTravels && plannedTravels.length > 0
-      ? [LAYOUT[current], ...plannedTravels.map((id) => LAYOUT[id])]
-      : [];
+  const [width, setWidth] = useState(0);
+  const scale = width / W;
 
-  const player = towardCenter(LAYOUT[current], 32);
+  const travels = plannedTravels ?? [];
+  const travelKey = travels.join("|");
+
+  /** Where the plan leaves you — that's who the map highlights and the walker chases. */
+  const dest = travels.length > 0 ? travels[travels.length - 1]! : origin;
+
+  const routeD = useMemo(() => {
+    const stops: LocationId[] = [origin, ...travels];
+    if (stops.length < 2) return "";
+
+    const pts: Pt[] = [];
+    for (let i = 1; i < stops.length; i++) {
+      const leg = walkPath(stops[i - 1]!, stops[i]!);
+      // Drop the repeated join point so the dashes don't double up.
+      pts.push(...(i === 1 ? leg : leg.slice(1)));
+    }
+    return toSvgPath(pts);
+    // Keyed on travelKey, not `travels` — the array is rebuilt every render, so
+    // depending on it directly would defeat the memo entirely.
+  }, [origin, travelKey]);
+
+  const onLayout = (e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width);
 
   return (
-    <View style={styles.card}>
+    <View style={styles.card} onLayout={onLayout}>
       <Svg width="100%" height="100%" viewBox={`0 0 ${W} ${H}`} style={StyleSheet.absoluteFill}>
         <Rect x={0} y={0} width={W} height={H} fill={flat.grass} />
 
@@ -99,51 +96,18 @@ export function TownMap(props: {
           strokeDasharray="10 10"
         />
 
-        {/* planned route: dotted coral line through the stops, in order */}
-        {route.slice(1).map((to, i) => {
-          const from = route[i]!;
-          return (
-            <Line
-              key={`route-${i}`}
-              x1={from.x}
-              y1={from.y}
-              x2={to.x}
-              y2={to.y}
-              stroke={flat.coral}
-              strokeWidth={3.5}
-              strokeDasharray="8 7"
-              strokeLinecap="round"
-            />
-          );
-        })}
-
-        {/* player character, standing just off their current building */}
-        <G>
-          <Circle
-            cx={player.x}
-            cy={player.y}
-            r={17}
-            fill="none"
-            stroke={colors.primary}
-            strokeWidth={2}
-            strokeDasharray="3 4"
-          />
+        {/* planned route, traced along the road the character will actually walk */}
+        {routeD ? (
           <Path
-            d={`M ${player.x - 6} ${player.y + 11} Q ${player.x - 6} ${player.y - 1} ${player.x} ${player.y - 1} Q ${player.x + 6} ${player.y - 1} ${player.x + 6} ${player.y + 11} Z`}
-            fill={colors.primary}
-            stroke={flat.outline}
-            strokeWidth={2}
+            d={routeD}
+            fill="none"
+            stroke={flat.coral}
+            strokeWidth={3.5}
+            strokeDasharray="8 7"
+            strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <Circle
-            cx={player.x}
-            cy={player.y - 7}
-            r={6}
-            fill={colors.primary}
-            stroke={flat.outline}
-            strokeWidth={2}
-          />
-        </G>
+        ) : null}
       </Svg>
 
       {LOCATION_IDS.map((id) => {
@@ -167,12 +131,14 @@ export function TownMap(props: {
               id={id}
               label={t(`loc.${id}`)}
               onPress={() => onSelect(id)}
-              highlighted={id === current}
+              highlighted={id === dest}
               size={BUILDING_SIZE}
             />
           </View>
         );
       })}
+
+      <Walker to={dest} scale={scale} snapKey={snapKey} onArrive={onArrive} />
     </View>
   );
 }

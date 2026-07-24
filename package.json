@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "test": "pnpm -r --filter=./packages/* run test",
+    "test": "pnpm -r run test",
     "typecheck": "pnpm -r run typecheck",
     "lint": "pnpm -r run lint",
     "build:engine": "pnpm --filter @fastlane/engine run build",

@@ -7,7 +7,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import { TIME_UNITS_PER_WEEK, travelCost, type LocationId } from "@fastlane/engine";
+import { TIME_UNITS_PER_WEEK, type LocationId } from "@fastlane/engine";
 
 import { Countdown } from "../../../src/components/Countdown";
 import { LocationSheet } from "../../../src/components/LocationSheet";
@@ -82,12 +82,14 @@ export default function Play() {
   const me = snapshot.players.find((p) => p.slot === snapshot.mySlot);
 
   const selectLocation = (loc: LocationId) => {
-    if (loc !== planLocation) {
-      const player = { ...myState, location: planLocation };
-      addAction({ type: "travel", to: loc });
-      void travelCost(player, planLocation, loc);
+    // Already standing there — no walk to wait for.
+    if (loc === planLocation) {
+      setSheet(loc);
+      return;
     }
-    setSheet(loc);
+    // Queue the trip; the sheet opens from TownMap's onArrive once the
+    // character has actually walked there.
+    addAction({ type: "travel", to: loc });
   };
 
   const submit = async () => {
@@ -166,9 +168,11 @@ export default function Play() {
       {/* town */}
       <ScrollView contentContainerStyle={{ paddingBottom: spacing.m }}>
         <TownMap
-          current={planLocation}
+          origin={(myState.location ?? "home") as LocationId}
           onSelect={selectLocation}
           plannedTravels={planDraft.filter((a) => a.type === "travel").map((a) => a.to)}
+          onArrive={(loc) => setSheet(loc)}
+          snapKey={`${snapshot.game.id}:${round?.roundNumber ?? 0}`}
         />
       </ScrollView>
 
